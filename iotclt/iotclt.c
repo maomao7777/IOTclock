@@ -146,14 +146,14 @@ int chk_press(void)
 	else
     {
         char tmp[64+1]={0};
-		size_t len;
+		int len;
         if(press==1)
 		{
 			//printf("input message u need send:\n");
 			strcpy(tmp,"on");
 			printf("send [%s]\n",tmp);
 			len=strlen(tmp);
-			if(write(sockfd,tmp,len)==-1)
+			if(write(sockfd,tmp,len)!=len)
 				ret=-1;
 		}
 		if(press>1)
@@ -161,7 +161,7 @@ int chk_press(void)
 			strcpy(tmp,"off");
 			printf("send [%s]\n",tmp);
 			len=strlen(tmp);
-			if(write(sockfd,tmp,len)==-1)
+			if(write(sockfd,tmp,len)!=len)
 				ret=-1;
 		}
         press=0;
