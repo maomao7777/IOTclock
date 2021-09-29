@@ -343,7 +343,7 @@ void eloop_run(void)
                 tv.tv_sec = 0;
                 tv.tv_usec = 0;
             }
-#if 1
+#if 
             printf("next timeout in %lu.%06lu sec\n", tv.tv_sec, tv.tv_usec);
 #endif
         }
