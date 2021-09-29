@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h> 
 #include <time.h>
+#include <sys/time.h>
 #include <string.h>
 #include <pthread.h>
 #include <fcntl.h>
@@ -130,12 +131,28 @@ void drop_cnn(int* cnnfd)
 void* tri_alarm(void *data)
 {
     int fd=*((int*)data);
+    time_t pr_sec=0;
+    struct timeval tv;
+    int period=0;
     while(1)
     {
-        write(fd,"0",1);
-        usleep(100*1000);
-        write(fd,"1",1);
-        usleep(100*1000);
+        gettimeofday(&tv,NULL);
+        if(pr_sec!=tv.tv_sec)
+        {
+            if(period<=330)
+                period=660;
+            else
+                period-=110;
+        }
+        else
+        {
+            write(fd,"0",1);
+            usleep(period);
+            write(fd,"1",1);
+            usleep(period);
+        }
+            
+        pr_sec=tv.tv_sec;
     }
 }
 
