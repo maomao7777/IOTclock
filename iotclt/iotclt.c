@@ -31,7 +31,7 @@ struct _dispkt
 	uint8_t da[6];
 	uint8_t sa[6];
 	uint16_t type;
-	char data[128];
+	char data[46];
 };
 typedef struct _dispkt dispkt;
 #endif
