@@ -8,10 +8,7 @@ cross:	clean eloop.c iotser.c
 	$(CROSS) -Os -Wall  eloop.c iotser.c -lpthread -o iotser
 
 clean:	
-	rm -f iotclt
-	
+	rm -f iotser
 test :	eloop.c test.c
 	rm -f testser
 	cc -Os -Wall  eloop.c test.c -lpthread -o testser
-	
-
