@@ -8,7 +8,7 @@ Notice:
 4.the bassic frame of server communication is implement from eloop as hostapd, copyright Jouni Malinen  
   
 How to use:  
-1.for get up:
+1.for get up:  
 complier iotser tnen run "iotser -c 10:00", and the buzzer will work on time, it will non stop untill someone press the button on the remote client placed in my company. remote client should run "iotclt server_adress"  
 
 2.for remote alarm:  
@@ -16,3 +16,7 @@ server run "iotser -a", buzzer work if remoteclient pressing button 1 time in 1 
 
 3.for really want to sleep:  
 unpluging the server power is the best way.
+
+/*update 2021/10/08*/  
+4.for layer2 discorver:  
+run iotser -d "interface_name" or iotclt -d "interface_name", server and client will sync ip adress in local  
