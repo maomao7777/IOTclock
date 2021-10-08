@@ -414,7 +414,7 @@ int main(int argc, char** argv)
         if(write(sockfd,tmp,len)!=len)
             printf("send msg error\n");
         memset(tmp,0,sizeof(tmp));
-        if(read(sockfd,tmp,sizeof(tmp))>0);
+        if(read(sockfd,tmp,sizeof(tmp))>0)
             printf("recv[%s]\n",tmp);
 #endif
     }

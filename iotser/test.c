@@ -320,14 +320,13 @@ void read_event_recv(int socket_fd, void *eloop_ctx, void *timeout_ctx)
     char string[127+1]={0};
     clockstat* p=(clockstat *)eloop_ctx;
     len = read(p->cnet, string, 127+1); 
-    printf("recv len %d\n",len);
+    printf("recv[%d]\n",len);
     if(len>0)
     {
         string[len]='\0';
-        printf("recv buf [%s]\n",string);
+        printf("recv_buf[%s]\n",string);
         if(strcmp(string,"on")==0)
         {
-
             if(!p->alarm)
                 pthread_create(&p->alarm, NULL, tri_alarm, &p->gpiofd); 
             write(p->cnet,"ok",2);
@@ -344,10 +343,10 @@ void read_event_recv(int socket_fd, void *eloop_ctx, void *timeout_ctx)
         }
         else if(strcmp(string,"fuck")==0)
         {
-            write(p->cnet,"fuck ur mother",32);
+            write(p->cnet,"fuck_ur_mother",strlen("fuck_ur_mother"));
         }
         else
-            write(p->cnet,"wut u fucking tell me",32);
+            write(p->cnet,"what_u_fucking_tell_me?",strlen("what_u_fucking_tell_me?"));
     }
     else
     {
