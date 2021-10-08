@@ -151,7 +151,6 @@ void handle_wrclose(int sig)
 /*-----------------------------------------------------------------------------------------------------------------------*/
 int chk_press(void)
 {
-
     static time_t pr_sec=0;
     static int pre_dig=0;
     static int press=0;
@@ -172,23 +171,31 @@ int chk_press(void)
     }
     else
     {
-        char tmp[64+1]={0};
+        char tmp[64];
         int len;
+		memset(tmp,0,sizeof(tmp));
         if(press==1)
         {
             strcpy(tmp,"on");
-            printf("send [%s]\n",tmp);
+            printf("send[%s]\n",tmp);
             len=strlen(tmp);
             if(write(sockfd,tmp,len)!=len)
                 ret=-1;
+			memset(tmp,0,sizeof(tmp));
+			if(read(sockfd,tmp,sizeof(tmp))>0)
+				printf("recv[%s]\n",tmp);
+			
         }
         if(press>1)
         {
             strcpy(tmp,"off");
-            printf("send [%s]\n",tmp);
+            printf("send[%s]\n",tmp);
             len=strlen(tmp);
             if(write(sockfd,tmp,len)!=len)
                 ret=-1;
+			memset(tmp,0,sizeof(tmp));
+			if(read(sockfd,tmp,sizeof(tmp))>0)
+				printf("recv[%s]\n",tmp);
         }
         press=0;
     }
@@ -397,14 +404,19 @@ int main(int argc, char** argv)
         if(-1==chk_press())
             go_byebye();
 #if 0 //for test       
-            int len;
-            char tmp[64]={0};
-            printf("input message u need send\n");
-            scanf("%s",tmp);
-            len=strlen(tmp);
-            write(sockfd,tmp,len);
+		int len;
+		char tmp[64];
+		memset(tmp,0,sizeof(tmp));
+		printf("input msg u need to send\n");
+		if(!scanf("%s",tmp))
+			printf("scan input error\n");
+		len=strlen(tmp);
+		if(write(sockfd,tmp,len)!=len)
+			printf("send msg error\n");
+		memset(tmp,0,sizeof(tmp));
+		if(read(sockfd,tmp,sizeof(tmp))>0);
+			printf("recv[%s]\n",tmp);
 #endif
     }
     return 0;
 }
-
