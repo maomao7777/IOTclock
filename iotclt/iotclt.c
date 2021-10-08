@@ -282,7 +282,7 @@ int	dis_ser_addr(char* serv_host,char* us_if)
 {
     dispkt pkt;
     struct sockaddr_ll dis_addr;
-    size_t len=sizeof(pkt);
+    size_t len;
     disfd=-1;
     if((disfd = socket(PF_PACKET, SOCK_RAW,htons(DISC_PROT))) < 0) 
     {
@@ -295,6 +295,7 @@ int	dis_ser_addr(char* serv_host,char* us_if)
         dis_addr.sll_family = PF_PACKET;
         dis_addr.sll_protocol =htons(DISC_PROT);
         dis_addr.sll_ifindex=if_get_index(us_if);
+        len=sizeof(pkt);
         memset(&pkt,0,len);
         memcpy(pkt.da,broadcast_addr,6);
         if(!if_get_hw_addr(us_if,pkt.sa))
