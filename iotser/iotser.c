@@ -37,6 +37,7 @@ struct _clockstat
     int cnet;
     int gpiofd;
     int skfd;
+    int en_stat;
     struct tm tinfo;
     pthread_t alarm;
 #if SUP_L2_DISC
@@ -149,7 +150,7 @@ void handle_intrp(int sig)
 /*-----------------------------------------------------------------------------------------------------------------------*/
 int if_get_index(const char *interface)
 {
-    struct ifreq    ifrq;
+    struct ifreq ifrq;
     int fd;
     /** sanity checks */
     if(interface == NULL)
@@ -278,7 +279,11 @@ void* tri_alarm(void *data)
 void chk_clockstat(void *eloop_ctx, void *timeout_ctx)
 {
     clockstat* p=(clockstat *)eloop_ctx;
-    if((p->cnet)>0)
+    if(p->en_stat
+#if 0
+        &&(p->cnet)>0
+#endif
+    )
     {
         time_t rawtime;
         struct tm* timeinfo;
@@ -314,13 +319,13 @@ void read_event_recv(int socket_fd, void *eloop_ctx, void *timeout_ctx)
     {
         string[len]='\0';
         printf("recv_buf[%s]\n",string);
-        if(strcmp(string,"on")==0)
+        if(strcmp(string,"alarm off")==0)
         {
             if(!p->alarm)
                 pthread_create(&p->alarm, NULL, tri_alarm, &p->gpiofd); 
             write(p->cnet,"ok",2);
         }
-        else if(strcmp(string,"off")==0)
+        else if(strcmp(string,"alarm off")==0)
         {
             if(p->alarm&&
                 !pthread_cancel(p->alarm))
@@ -330,9 +335,25 @@ void read_event_recv(int socket_fd, void *eloop_ctx, void *timeout_ctx)
             }
             write(p->cnet,"ok",2);
         }
+        else if(strcmp(string,"get_stat")==0)
+        {
+            char tmp[32]={0};
+            sprintf(tmp,"stat is [%d]",p->en_stat);
+            write(p->cnet,tmp,strlen(tmp));
+        }
+        else if(strcmp(string,"set_stat 0")==0)
+        {
+            p->en_stat=0;
+            write(p->cnet,"ok",strlen("ok"));
+        }
+        else if(strcmp(string,"set_stat 1")==0)
+        {
+             p->en_stat=1;
+            write(p->cnet,"ok",strlen("ok"));
+        }
         else if(strcmp(string,"fuck")==0)
         {
-            write(p->cnet,"fuck_ur_mother",strlen("fuck_ur_mother"));
+            write(p->cnet,"fuck_ur_mama",strlen("fuck_ur_mama"));
         }
         else
             write(p->cnet,"what_u_fucking_tell_me?",strlen("what_u_fucking_tell_me?"));
@@ -516,7 +537,8 @@ int main(int argc, char** argv)
     if(cfg_serInit(p,argc,argv)==-1)
     {
         printf("set parmater error!\n");
-        return EXIT_FAILURE;
+        ret=EXIT_FAILURE;
+        goto out;
     }
     
     signal(SIGINT, handle_intrp);

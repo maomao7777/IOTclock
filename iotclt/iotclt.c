@@ -176,7 +176,7 @@ int chk_press(void)
         memset(tmp,0,sizeof(tmp));
         if(press==1)
         {
-            strcpy(tmp,"on");
+            strcpy(tmp,"alarm on");
             printf("send[%s]\n",tmp);
             len=strlen(tmp);
             if(write(sockfd,tmp,len)!=len)
@@ -188,7 +188,7 @@ int chk_press(void)
         }
         if(press>1)
         {
-            strcpy(tmp,"off");
+            strcpy(tmp,"alarm off");
             printf("send[%s]\n",tmp);
             len=strlen(tmp);
             if(write(sockfd,tmp,len)!=len)

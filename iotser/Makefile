@@ -4,7 +4,7 @@ CROSS = ../../tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-
 all:	clean eloop.c iotser.c
 	cc -Os -Wall  eloop.c iotser.c -lpthread -o iotser
 
-cross:	clean eloop.c iotser.c
+crossall:	clean eloop.c iotser.c
 	$(CROSS) -Os -Wall  eloop.c iotser.c -lpthread -o iotser
 
 clean:	
