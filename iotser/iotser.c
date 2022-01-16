@@ -319,13 +319,13 @@ void read_event_recv(int socket_fd, void *eloop_ctx, void *timeout_ctx)
     {
         string[len]='\0';
         printf("recv_buf[%s]\n",string);
-        if(strcmp(string,"alarm on")==0)
+        if(strcmp(string,"al_on")==0)
         {
             if(!p->alarm)
                 pthread_create(&p->alarm, NULL, tri_alarm, &p->gpiofd); 
             write(p->cnet,"ok",2);
         }
-        else if(strcmp(string,"alarm off")==0)
+        else if(strcmp(string,"al_off")==0)
         {
             if(p->alarm&&
                 !pthread_cancel(p->alarm))
@@ -334,6 +334,23 @@ void read_event_recv(int socket_fd, void *eloop_ctx, void *timeout_ctx)
                     write(p->gpiofd,"0",1);
             }
             write(p->cnet,"ok",2);
+        }
+         else if(strcmp(string,"get_clock")==0)
+        {
+            char tmp[32]={0};
+            sprintf(tmp, "get_clock[%02d:%02d]",p->tinfo.tm_hour,p->tinfo.tm_min);
+            write(p->cnet,tmp,strlen(tmp));
+        }
+        else if(strncmp(string,"set_clock",strlen("set_clock"))==0)
+        {
+            char tmp[32]={0};
+            int h,m;
+            sscanf(string+strlen("set_clock")+1,"%d:%d",&h,&m);
+            if(h>=0&&h<=23)
+                p->tinfo.tm_hour=h;
+            if(m>=0&&m<=59)
+                p->tinfo.tm_min=m;
+            write(p->cnet,"ok",strlen(tmp));
         }
         else if(strcmp(string,"get_stat")==0)
         {
@@ -354,6 +371,12 @@ void read_event_recv(int socket_fd, void *eloop_ctx, void *timeout_ctx)
         else if(strcmp(string,"fuck")==0)
         {
             write(p->cnet,"fuck_ur_mama",strlen("fuck_ur_mama"));
+        }
+        else if(strcmp(string,"help")==0)
+        {
+            char tmp[128]={0};
+            sprintf(tmp,"%s\n%s\n%s\n","al_off/al_on","get_stat/set_stat","get_clock/set_clock");
+            write(p->cnet,"tmp",strlen("tmp"));
         }
         else
             write(p->cnet,"what_u_fucking_tell_me?",strlen("what_u_fucking_tell_me?"));
