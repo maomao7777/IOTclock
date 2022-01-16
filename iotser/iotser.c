@@ -139,7 +139,7 @@ void cnn_bye(void)
 #endif
 }
 /*-----------------------------------------------------------------------------------------------------------------------*/
-void handle_intrp(int sig)
+void handle_stop(int sig)
 {
     printf("%s[%d]: signal = %d\n", __FUNCTION__, __LINE__, sig);
     eloop_destroy();
@@ -541,7 +541,8 @@ int main(int argc, char** argv)
         goto out;
     }
     
-    signal(SIGINT, handle_intrp);
+    signal(SIGINT, handle_stop);
+    signal(SIGTERM, handle_stop);
 #if SUP_L2_DISC /*create discorver ser sk .....*/
     if ((p->disfd = socket(PF_PACKET, SOCK_RAW, htons(DISC_PROT))) < 0) 
     {
