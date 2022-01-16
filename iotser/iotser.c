@@ -319,7 +319,7 @@ void read_event_recv(int socket_fd, void *eloop_ctx, void *timeout_ctx)
     {
         string[len]='\0';
         printf("recv_buf[%s]\n",string);
-        if(strcmp(string,"alarm off")==0)
+        if(strcmp(string,"alarm on")==0)
         {
             if(!p->alarm)
                 pthread_create(&p->alarm, NULL, tri_alarm, &p->gpiofd); 
