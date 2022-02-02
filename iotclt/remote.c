@@ -256,28 +256,19 @@ int main(int argc, char** argv)
     {
 #if 1 //for test       
         int len;
-        int sndc;
+        //int sndc;
         char snd[128];
-        char tmp[64];
-        char tmp2[64];
-        memset(tmp,0,sizeof(tmp));
-        memset(tmp2,0,sizeof(tmp2));
+        memset(snd,0,sizeof(snd));
         printf("input msg u need to send\n");
-        sndc=scanf("%s %s",tmp,tmp2);
-        if(!sndc){
-            printf("scan input error\n");
+        fgets(snd,sizeof(snd),stdin);
+        len=strlen(snd)-1;//ignore last '\n'
+        if(len<1)
             continue;
-        }
-        if(sndc==1)
-            sprintf(snd,"%s",tmp);
-        else if (sndc==2)
-            sprintf(snd,"%s %s",tmp,tmp2);
-        len=strlen(snd);
         if(write(sockfd,snd,len)!=len)
             printf("send msg error\n");
         memset(snd,0,sizeof(snd));
         if(read(sockfd,snd,sizeof(snd))>0)
-            printf("recv[%s]\n",snd);
+            printf("recv:\n%s\n",snd);
 #endif
     }
     return 0;

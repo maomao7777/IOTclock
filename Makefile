@@ -1,7 +1,9 @@
 all:	
 	cd iotser && make all 
 	cd iotclt && make all
-
+clean:
+	cd iotser && make clean
+	cd iotclt && make clean
 crossall:	
 	cd iotser && make crossall 
 	cd iotclt && make crossall

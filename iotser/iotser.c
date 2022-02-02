@@ -335,22 +335,21 @@ void read_event_recv(int socket_fd, void *eloop_ctx, void *timeout_ctx)
             }
             write(p->cnet,"ok",2);
         }
-         else if(strcmp(string,"get_clock")==0)
+        else if(strcmp(string,"get_clock")==0)
         {
             char tmp[32]={0};
-            sprintf(tmp, "get_clock[%02d:%02d]",p->tinfo.tm_hour,p->tinfo.tm_min);
+            sprintf(tmp, "get_clock is [%02d:%02d]",p->tinfo.tm_hour,p->tinfo.tm_min);
             write(p->cnet,tmp,strlen(tmp));
         }
         else if(strncmp(string,"set_clock",strlen("set_clock"))==0)
         {
-            char tmp[32]={0};
             int h,m;
             sscanf(string+strlen("set_clock")+1,"%d:%d",&h,&m);
             if(h>=0&&h<=23)
                 p->tinfo.tm_hour=h;
             if(m>=0&&m<=59)
                 p->tinfo.tm_min=m;
-            write(p->cnet,"ok",strlen(tmp));
+            write(p->cnet,"ok",strlen("ok"));
         }
         else if(strcmp(string,"get_stat")==0)
         {
@@ -375,8 +374,8 @@ void read_event_recv(int socket_fd, void *eloop_ctx, void *timeout_ctx)
         else if(strcmp(string,"help")==0)
         {
             char tmp[128]={0};
-            sprintf(tmp,"%s\n%s\n%s\n","al_off/al_on","get_stat/set_stat","get_clock/set_clock");
-            write(p->cnet,"tmp",strlen("tmp"));
+            sprintf(tmp,"%s\n%s\n%s","al_off/al_on","get_stat/set_stat[0/1]","get_clock/set_clock[mm:ss]");
+            write(p->cnet,tmp,strlen(tmp));
         }
         else
             write(p->cnet,"what_u_fucking_tell_me?",strlen("what_u_fucking_tell_me?"));
@@ -503,6 +502,7 @@ int cfg_serInit(clockstat *p,int ninp,char **inp)
         {
             sscanf(inp[pra+1],"%d:%d",&p->tinfo.tm_hour,&p->tinfo.tm_min);
             printf("set clock %02d:%02d\n",p->tinfo.tm_hour,p->tinfo.tm_min);
+            p->en_stat=1;
             setclok=1;
         }
         if(strcmp(inp[pra],"-a")==0
