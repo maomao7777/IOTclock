@@ -9,7 +9,7 @@ Notice:
   
 How to use:  
 1.for get up:  
-complier iotser tnen run "iotser -c 10:00", and the buzzer will work on time, it will non stop untill someone press the button on the remote client placed in my company. remote client should run "iotclt server_adress"  
+complier iotser and run "iotser -c 10:00", buzzer will work on time, it will non stop untill someone press the button on the remote client placed in my company. remote client should run "iotclt server_adress"  
 
 2.for remote alarm:  
 server run "iotser -a", buzzer work if remoteclient pressing button 1 time in 1 sec, and stop for pressing 2 times in 1 sec.(you should use above method to stop get up buzzer)  
